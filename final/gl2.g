@@ -37,19 +37,6 @@ DeclareGlobalFunction("PSL2@");
 
 #   Code to produce various decorations of L(n,q)
 #   Written by Derek Holt - 2002
-MatToQ@:=function(A,q)
-local B,i,j;
-  #   raise every element of matrix A to q-th power
-  B:=MutableCopyMat(A);
-  for i in [1..Length(A)] do
-    for j in [1..Length(A[1])] do
-      B[i][j]:=(A[i][j])^q;
-    od;
-  od;
-  return B;
-  
-end;
-
 InstallGlobalFunction(GL2@,
 function(n,q)
 local G,G2,gens,mat,i,m;

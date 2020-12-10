@@ -783,7 +783,14 @@ end;
 InstallGlobalFunction(MatToQ@,
 function(A,q)
 local B,i,j;
-  return List(A,x->List(x,y->y^q));
+  #   raise every element of matrix A to q-th power
+  B:=MutableCopyMat(A);
+  for i in [1..Length(A)] do
+    for j in [1..Length(A[1])] do
+      B[i][j]:=(A[i][j])^q;
+    od;
+  od;
+  return B;
 end);
 
 ModToQ@:=function(M,q)
