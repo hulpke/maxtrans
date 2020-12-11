@@ -135,7 +135,7 @@ local
     normaliser:=true;
     #   avoids a few problems e.g. SL2 fixes symplectic form.
   fi;
-  if Size(CollectedFactors(q))<>1 then
+  if Size(Collected(Factors(q)))<>1 then
     Error("<q> must be a prime power");
   fi;
   # rewritten select statement
@@ -146,7 +146,7 @@ local
   fi;
   #  makes life easier!
   z:=PrimitiveElement(GF(qq));
-  fac:=CollectedFactors(q);
+  fac:=Collected(Factors(q));
   p:=fac[1][1];
   e:=fac[1][2];
   # rewritten select statement
@@ -620,7 +620,7 @@ local
           fi;
           continue;
         fi;
-        primes:=List(CollectedFactors(d),f->f[1]);
+        primes:=List(Collected(Factors(d)),f->f[1]);
         if (d=2 and q in Set([7,9])) or (d=3 and q=4) then
           continue;
           #  small exceptions
@@ -639,7 +639,7 @@ local
 #         if novelties then
 #           continue;
 #         fi;
-#         primes:=List(CollectedFactors(d),f->f[1]);
+#         primes:=List(Collected(Factors(d)),f->f[1]);
 #         for s in primes do
 #           if IsEvenInt(QuoInt(d,s)) then
 #             Add(asmax,GammaSp@(d,q,s:normaliser:=normaliser));
@@ -665,7 +665,7 @@ local
 #         continue;
 #         #  small exceptions
 #       fi;
-#       primes:=List(CollectedFactors(d),f->f[1]);
+#       primes:=List(Collected(Factors(d)),f->f[1]);
 #       for s in primes do
 #         if s<>2 then
 #           #  s=2 doesn't give subgroup
@@ -680,7 +680,7 @@ local
 #         fi;
 #         continue;
 #       fi;
-#       primes:=List(CollectedFactors(d),f->f[1]);
+#       primes:=List(Collected(Factors(d)),f->f[1]);
 #       for s in primes do
 #         dim:=QuoInt(d,s);
 #         if dim <= 2 and (d<>4 or sign<>-1 or q=3) then
@@ -979,7 +979,7 @@ local
 #     if novelties then
 #       continue;
 #     fi;
-#     face:=CollectedFactors(ee);
+#     face:=Collected(Factors(ee));
 #     #  recall q=p^e, ee=2e in type U, ee=e o.w.
 #     for pf in List(face,f->f[1]) do
 #       f:=QuoInt(e,pf);
@@ -1124,7 +1124,7 @@ local
 #     od;
 #     #   for pf in [f[1] : f in face] do
 #   elif cl=6 then
-#     fac:=CollectedFactors(d);
+#     fac:=Collected(Factors(d));
 #     if Size(fac)<>1 then
 #       continue;
 #     fi;
@@ -1384,7 +1384,7 @@ local
 #         #  O+(2,q) imprimitive, O-(2,q) semilinear
 #         continue;
 #       fi;
-#       fac:=CollectedFactors(q);
+#       fac:=Collected(Factors(q));
 #       p:=fac[1][1];
 #       e:=fac[1][2];
 #       if IsEvenInt(e) then
