@@ -6,7 +6,6 @@
 #  GCD, GConjugates, GF, GL, GModule, GOMinus, GOPlus, GetLibraryRoot,
 #  Integers, IsEven, IsOdd, IsPower, Order, Position, PrimitiveElement, Read,
 #  Remove, SOMinus, SOPlus, ScalarMatrix, SymplecticForm, Sz, TransformForm,
-#  Universe
 
 #  Defines: ClassicalMaximals, GConjugates
 
@@ -23,7 +22,7 @@ ClassicalMaximals@:=function(type,d,q)
 local 
    A,C,CG,CN,CS,S,S1,S2,varZ,_LR,_LRS,all,asmax,c9lib,cl,classes,d1,d2,dim,divs,
    e,ee,ex,f,fac,face,form,general,half,i,isit,isp,k,lim,m,n,nconj,normaliser,
-   novelties,p,pf,primes,qq,r,rq,s,sign,sign1,special,t,trans,type,z;
+   novelties,p,pf,primes,qq,r,rq,s,sign,sign1,special,t,trans,z;
   classes:=ValueOption("classes");
   if classes=fail then
     classes:=[1..9];
@@ -120,7 +119,7 @@ local
     fi;
     type:="O";
   fi;
-  if Universe(classes)<>Integers() or not IsSubset([1..9],classes) then
+  if not IsSubset([1..9],classes) then
     Error("<classes> must be a subset of {1..9}");
   fi;
   if 9 in classes and d > 12 then
