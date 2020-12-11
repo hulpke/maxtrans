@@ -136,11 +136,11 @@ InstallGlobalFunction(ScalarMat,function(dim,s)
   return s*IdentityMat(dim,s);
 end);
 
-InstallGlobalFunction(MutableIdentityMat,function(n,R)
+BindGlobal("MutableIdentityMat",function(n,R)
   return MutableCopyMat(IdentityMat(n, R));
 end);
 
-InstallGlobalFunction(MutableNullMat,function(n,R)
+BindGlobal("MutableNullMat",function(n,R)
   return MutableCopyMat(NullMat(n, R));
 end);
 
