@@ -59,10 +59,10 @@ local K,d,det,isp,r;
 end;
 
 InstallGlobalFunction(NormaliserOfExtraSpecialGroup@,
-function(r,q)
+function(d,q)
 local 
-   G,M,R,cmat,d,det,dp,ee,esg,esn,exp,fac,first,form,general,gl,i,insl,isit,
-   isp,j,k,l,mat,n,north,p,perm,phi,pp,qfac,r2,rno,rq,rt,scal,slm1,slm2,
+   G,M,d,cmat,diag_list,det,dp,ee,esg,esn,exp,fac,first,form,general,gl,i,insl,isit,
+   isp,j,k,l,mat,n,north,r,perm,phi,pp,qfac,r2,rno,rq,rt,scal,slm1,slm2,
    slm3,w,z,zz,normaliser,unitary,orthogonal;
   general:=ValueOption("general");
   if general=fail then
@@ -81,32 +81,32 @@ local
     orthogonal:=false;
   fi;
   #   Construct complete normaliser of extraspecial group as subgroup of
-  #  * GL(r,q). r must be a prime power p^n with p | q-1.
-  #  * Extraspecial group has order p^(2n+1) and exponent p for p odd,
-  #  * and is of + type - central product of dihedrals - for p=2.
+  #  * GL(d,q). d must be a prime power r^n with r | q-1.
+  #  * Extraspecial group has order r^(2n+1) and exponent r for r odd,
+  #  * and is of + type - central product of dihedrals - for r=2.
   #  *
-  #  * If general is false then intersection with SL(r,q) is returned
+  #  * If general is false then intersection with SL(d,q) is returned
   #  * normaliser only applies when unitary or orthogonal set, and
   #  * returns full normaliser fixing form mod scalars
   #  *
-  #  * orthogonal option returns intersection with OmegaPlus(d,q) when d =
-  #  2^r
+  #  * orthogonal option returns intersection with OmegaPlus(diag_list,q) when diag_list =
+  #  2^d
   #  * (this is always same as intersection with SOPlus and GOPlus).
   
-  if r <= 2 then
+  if d <= 2 then
     Error("Degree must be at least 3 in NormaliserOfExtraSpecialGroup");
   fi;
   if normaliser then
     general:=true;
   fi;
   insl:=true;
-  fac:=Collected(Factors(r));
+  fac:=Collected(Factors(d));
   if Length(fac)<>1 then
     Error("First argument must be a prime power in NormaliserOfExtraSpecialGroup");
   fi;
-  p:=fac[1][1];
+  r:=fac[1][1];
   n:=fac[1][2];
-  if ((q-1) mod p)<>0 then
+  if ((q-1) mod r)<>0 then
     Error("Divisibility condition not satisfied in NormaliserOfExtraSpecialGroup");
   fi;
   if unitary then
@@ -114,64 +114,64 @@ local
     pp:=qfac[1][1];
     ee:=qfac[1][2];
     rq:=pp^(QuoInt(ee,2));
-    if (ee mod 2)<>0 or ((rq-1) mod p)=0 then
+    if (ee mod 2)<>0 or ((rq-1) mod r)=0 then
       Error("Inappropriate field for unitary option");
     fi;
   fi;
-  if orthogonal and (p<>2) then
+  if orthogonal and (r<>2) then
     Error("orthogonal option only applicable for even degrees");
   fi;
   z:=PrimitiveElement(GF(q));
-  w:=z^QuoInt(q-1,p);
-  #   w is a primitive p-th root of 1
-  gl:=GL(r,q);
+  w:=z^QuoInt(q-1,r);
+  #   w is a primitive r-th root of 1
+  gl:=GL(d,q);
   #   first make generators of extraspecial group
   esg:=[];
   #  diagonal generators:
   for i in [0..n-1] do
-    d:=[];
-    for j in [1..p^(n-1-i)] do
-      for k in [0..p-1] do
-        for l in [1..p^i] do
-          Add(d,w^k);
+    diag_list:=[];
+    for j in [1..r^(n-1-i)] do
+      for k in [0..r-1] do
+        for l in [1..r^i] do
+          Add(diag_list,w^k);
         od;
       od;
     od;
-    Add(esg,DiagonalMat(GF(q),d));
+    Add(esg,DiagonalMat(GF(q),diag_list));
   od;
   #  permutation matrix generators
-  M:=function(r,p) if r mod p=0 then return p; else return r mod p;fi;end;
+  M:=function(d,r) if d mod r=0 then return r; else return d mod r;fi;end;
   dp:=[];
   #   we will collect the permutations for use later.
   for i in [0..n-1] do
     perm:=[];
-    for j in [1..p^(n-1-i)] do
-      for l in [1..p^(i+1)] do
-        perm[(j-1)*p^(i+1)+l]:=(j-1)*p^(i+1)+M(l+(p^i),p^(i+1));
+    for j in [1..r^(n-1-i)] do
+      for l in [1..r^(i+1)] do
+        perm[(j-1)*r^(i+1)+l]:=(j-1)*r^(i+1)+M(l+(r^i),r^(i+1));
       od;
     od;
     perm:=PermList(perm);
     Add(dp,perm);
     Add(esg,PermutationMat(perm,n,GF(q)));
   od;
-  #  esg now generates extraspecial group of order p^(2n+1).
+  #  esg now generates extraspecial group of order r^(2n+1).
   #  Now normaliser gens.
   esn:=[];
   #  First diagonals.
   for i in [0..n-1] do
-    d:=[];
-    for j in [1..p^((n-1)-i)] do
+    diag_list:=[];
+    for j in [1..r^((n-1)-i)] do
       exp:=0;
-      for k in [0..p-1] do
+      for k in [0..r-1] do
         exp:=exp+k;
-        for l in [1..p^i] do
-          Add(d,w^exp);
+        for l in [1..r^i] do
+          Add(diag_list,w^exp);
         od;
       od;
     od;
-    slm1:=MakeDeterminantOne@(DiagonalMat(GF(q),d));
+    slm1:=MakeDeterminantOne@(DiagonalMat(GF(q),diag_list));
     if DeterminantMat(slm1)<>w^0 then
-      if r<>3 then
+      if d<>3 then
         Error("Bug A");
       fi;
       insl:=false;
@@ -183,20 +183,20 @@ local
   slm2:=[];
   first:=true;
   for i in [0..n-1] do
-    mat:=NullMat(p^(i+1),p^(i+1),GF(q));
+    mat:=NullMat(r^(i+1),r^(i+1),GF(q));
     rno:=0;
-    for k in [0..p-1] do
-      for j in [1..p^i] do
+    for k in [0..r-1] do
+      for j in [1..r^i] do
         rno:=rno+1;
-        for l in [0..p-1] do
-          mat[rno][j+(l*p^i)]:=w^(k*l);
+        for l in [0..r-1] do
+          mat[rno][j+(l*r^i)]:=w^(k*l);
         od;
       od;
     od;
-    mat:=DirectSumMat(List([1..p^((n-1)-i)],j->mat));
+    mat:=DirectSumMat(List([1..r^((n-1)-i)],j->mat));
 
-    if p=2 and q mod 8 in [1,7] then
-      #  2 is a square mod p - make determinant 1 and also make orthogonal
+    if r=2 and q mod 8 in [1,7] then
+      #  2 is a square mod r - make determinant 1 and also make orthogonal
       r2:=RootFFE(2*Z(q)^0,2);
       mat:=mat*r2^-1;
     else
@@ -207,7 +207,7 @@ local
           isp:=true;
           rt:=det^0;
         else
-          rt:=RootFFE(det^-1,r);
+          rt:=RootFFE(det^-1,d);
           isp:=rt<>fail;
         fi;
       fi;
@@ -217,11 +217,11 @@ local
     fi;
     slm2[i+1]:=mat;
     #  slm2[i+1] := MakeDeterminantOne(mat);
-    if r=3 and not insl then
+    if d=3 and not insl then
       Add(esn,slm1^-1*slm2[i+1]*slm1);
     fi;
     if DeterminantMat(slm2[i+1])<>w^0 then
-      if r<>4 then
+      if d<>4 then
         Error("Bug B");
       fi;
       if insl then
@@ -233,7 +233,7 @@ local
         Add(esn,(slm2[i])^-1*slm2[i+1]);
       fi;
     else
-      if orthogonal and r > 4 and q mod 8 in [3,5] then
+      if orthogonal and d > 4 and q mod 8 in [3,5] then
         if not first then
           Add(esn,slm2[i]^-1*slm2[i+1]);
         else
@@ -248,17 +248,17 @@ local
     first:=false;
   od;
   #  Finally some permutation matrices that normalise it.
-  R:=Group(dp,());
+  d:=Group(dp,());
   for i in [2..n] do
-    phi:=GroupHomomorphismByImagesNC(R,R,
-      GeneratorsOfGroup(R),Concatenation([R.1*R.i],List([2..n],j->R.j)));
-    slm3:=MakeDeterminantOne@(PermutationMat(PermInducingAut@(R,phi),GF(q)));
+    phi:=GroupHomomorphismByImagesNC(d,d,
+      GeneratorsOfGroup(d),Concatenation([d.1*d.i],List([2..n],j->d.j)));
+    slm3:=MakeDeterminantOne@(PermutationMat(PermInducingAut@(d,phi),GF(q)));
     if DeterminantMat(slm3)=w^0 or general then
       Add(esn,slm3);
     fi;
     if insl and DeterminantMat(slm3)<>w^0 then
       #   q  = 3 or 7 mod 8
-      if r<>4 then
+      if d<>4 then
         Error("Bug C");
       fi;
       Add(esn,slm3^-1*slm2[1]*slm3);
@@ -271,19 +271,19 @@ local
   od;
   G:=Group(Concatenation(esg,esn),One(gl));
   if orthogonal then
-    if r=4 then
+    if d=4 then
       scal:=true;
     else
       scal:=false;
     fi;
-    #  r = 4 handled separately
+    #  d = 4 handled separately
     # =v= MULTIASSIGN =v=
     form:=SymmetricBilinearForm@(G:Scalars:=scal);
     isit:=form.val1;
     form:=form.val2;
     # =^= MULTIASSIGN =^=
     cmat:=TransformForm@(form,"orthogonalplus");
-    if r > 4 and normaliser and q mod 8 in [3,5] then
+    if d > 4 and normaliser and q mod 8 in [3,5] then
       Add(esn,north);
     fi;
   else
@@ -300,28 +300,28 @@ local
   if unitary and not normaliser then
     zz:=z^(rq-1);
     if general then
-      Add(esn,zz*IdentityMat(r,GF(q)));
+      Add(esn,zz*IdentityMat(d,GF(q)));
     else
-      Add(esn,zz^(QuoInt((rq+1),Gcd(rq+1,r)))*IdentityMat(r,GF(q)));
+      Add(esn,zz^(QuoInt((rq+1),Gcd(rq+1,d)))*IdentityMat(d,GF(q)));
     fi;
   else
     if normaliser or not orthogonal then
       if general then
-	Add(esn,z*IdentityMat(r,GF(q)));
+	Add(esn,z*IdentityMat(d,GF(q)));
       else
-	Add(esn,z^(QuoInt((q-1),Gcd(q-1,r)))*IdentityMat(r,GF(q)));
+	Add(esn,z^(QuoInt((q-1),Gcd(q-1,d)))*IdentityMat(d,GF(q)));
       fi;
     fi;
   fi;
   G:=Group(Concatenation(esg,esn),One(gl));
   if unitary or orthogonal then
     G:=G^cmat;
-    if orthogonal and r=4 and not normaliser then
-      G:=Intersection(G,OmegaPlus(r,q));
+    if orthogonal and d=4 and not normaliser then
+      G:=Intersection(G,OmegaPlus(d,q));
     fi;
   fi;
   return G;
-  #  in orthogonal case: p=3,5 mod 8, c=4 (go,so), p=1,7 mod 8, c=8
+  #  in orthogonal case: r=3,5 mod 8, c=4 (go,so), r=1,7 mod 8, c=8
   
 end);
 
